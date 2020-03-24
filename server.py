@@ -1,0 +1,97 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+This is a wallet stat bot.
+"""
+
+import logging
+from wallet import Balance
+from aiogram import Bot, Dispatcher, executor, types
+
+import exceptions
+
+API_TOKEN = '1109117381:AAHB8Iwyzwx3CQxx5zAM3gHAbvzIxC2hReg'
+TELEGRAM_ACCESS_ID = 145940730
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
+# Initialize bot and dispatcher
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher(bot)
+
+
+def auth(func) :
+    """Authorisation: only TELEGRAM_ACCESS_ID will be accepted."""
+
+    async def wrapper(message):
+        if message["from"]["id"] != TELEGRAM_ACCESS_ID:
+            return await message.reply(
+                "Access denied! for {}".format(message["from"]["id"]), 
+                reply=False)
+        return await func(message)
+
+    return wrapper
+
+
+@dp.message_handler(commands=['start', 'help'])
+@auth
+async def send_welcome(message: types.Message):
+    """
+    Bot help message.
+
+    This handler will be called when user sends `/start` or `/help` command.
+    """
+    
+    await message.reply(
+        "Binance wallet stats bot\n\n"
+        "For several days: /day1 or /day2\n"
+        "For the weeks: /week1 \n"
+        "For the months: /month1 ")
+
+
+@dp.message_handler()
+@auth
+async def standard_reply(message: types.Message):
+    """
+    This handler will be called when user sends a command.
+    Parameters: 
+        message (str): received command.
+
+    Returns:
+        string to display as a reply
+    """
+
+    balance = Balance()
+
+    try:
+        reply_info = balance.summary_for(message.text)
+    except exceptions.NotCorrectMessage as e:
+        await message.reply(str(e))
+        return
+
+    answer_message = (
+        "{}".format(reply_info)
+    )
+    await message.reply(answer_message)
+
+
+# @dp.message_handler(regexp='(^cat[s]?$|puss)')
+# async def cats(message: types.Message):
+#     with open('data/cats.jpg', 'rb') as photo:
+#         '''
+#         # Old fashioned way:
+#         await bot.send_photo(
+#             message.chat.id,
+#             photo,
+#             caption='Cats are here 😺',
+#             reply_to_message_id=message.message_id,
+#         )
+#         '''
+
+#         await message.reply_photo(photo, caption='Cats are here 😺')
+
+
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
