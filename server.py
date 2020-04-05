@@ -5,17 +5,16 @@
 This is a wallet stat bot.
 """
 
-import logging
+import config
 from wallet import Balance
 from aiogram import Bot, Dispatcher, executor, types
 
 import exceptions
 
-API_TOKEN = '1109117381:AAHB8Iwyzwx3CQxx5zAM3gHAbvzIxC2hReg'
-TELEGRAM_ACCESS_ID = 145940730
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# api_tocken retrive from telegram
+API_TOKEN = config.api_tocken
+# the only telegram account id allowed to use this bot
+TELEGRAM_ACCESS_ID = config.telgram_client_id
 
 # Initialize bot and dispatcher
 bot = Bot(token=API_TOKEN)
@@ -23,7 +22,7 @@ dp = Dispatcher(bot)
 
 
 def auth(func) :
-    """Authorisation: only TELEGRAM_ACCESS_ID will be accepted."""
+    """Auth: only TELEGRAM_ACCESS_ID will be accepted."""
 
     async def wrapper(message):
         if message["from"]["id"] != TELEGRAM_ACCESS_ID:
@@ -75,23 +74,6 @@ async def standard_reply(message: types.Message):
         "{}".format(reply_info)
     )
     await message.reply(answer_message)
-
-
-# @dp.message_handler(regexp='(^cat[s]?$|puss)')
-# async def cats(message: types.Message):
-#     with open('data/cats.jpg', 'rb') as photo:
-#         '''
-#         # Old fashioned way:
-#         await bot.send_photo(
-#             message.chat.id,
-#             photo,
-#             caption='Cats are here 😺',
-#             reply_to_message_id=message.message_id,
-#         )
-#         '''
-
-#         await message.reply_photo(photo, caption='Cats are here 😺')
-
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
