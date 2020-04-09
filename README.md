@@ -30,4 +30,10 @@ postgres connect string
 ```
 db_sn_url = "postgres://user:password@host"
 ```
+binance keys
+```
+api_key = "P462l7kVLb6cWgPX7PAA4vdg9UDS3AfNxdgmqLgwajwojnXLhhCsxqHrOHeD1CU6"
+api_secret = "xbi3vcu42uiDOHKOfqTV25nCUJ2xgIhLEXYZcimymArn5sYV1Defids2eEOEEuWQ"
+```
+
 ======================

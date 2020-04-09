@@ -1,3 +1,7 @@
+"""
+This dictionary defines synonyms of timeframes DAY, WEEK, MONTH and YEAR
+"""
+
 timeframes = {
     "DAY" : "DAY",
     "DAYS" : "DAY",
