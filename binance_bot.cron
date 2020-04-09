@@ -1,0 +1,4 @@
+HOME=/home/admin/
+SHELL=/bin/bash
+
+30 22 * * *  /home/admin/.pyenv/versions/3.8.2/bin/python wallet-stats/snapshot.py MANUAL
