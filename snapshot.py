@@ -88,12 +88,17 @@ try:
             usd_value = 0.0
             usd_name = asset['asset'] + "USDT"
             btc_value = 0.0
+            # for pairs like ETHBTC or LTCBTC
             btc_name = asset['asset'] + "BTC"
+            # for pairs like BTCRUB or BTCBUSD
+            btc_reverse_name = "BTC" + asset['asset']
 
             if asset['asset'] == "BTC":
                 btc_value = float(asset['free']) + float(asset['locked'])
             elif btc_name in prices :
                 btc_value = (float(asset['free']) + float(asset['locked'])) *  prices[btc_name]
+            elif btc_reverse_name in prices:
+                btc_value = (float(asset['free']) + float(asset['locked'])) /  prices[btc_reverse_name]
             
             if asset['asset'] == "USDT":
                 usd_value = float(asset['free']) + float(asset['locked'])
@@ -104,7 +109,8 @@ try:
                     usd_value = (float(asset['free']) + float(asset['locked'])) * (prices["BTCUSDT"] * prices[btc_name])
 
             # commit record
-            db.execute("INSERT INTO snapshot24h (account, asset, dt, free, locked, usd, btc) VALUES (:account, :asset, NOW(), :free, :locked, :usd, :btc)", {
+            db.execute("INSERT INTO snapshot24h (account, asset, dt, free, locked, usd, btc) VALUES \
+                (:account, :asset, NOW(), :free, :locked, :usd, :btc)", {
                 "account": ACCOUNT_CODE,
                 "asset": asset['asset'],
                 "free" : '%.8f' % float(asset['free']),
