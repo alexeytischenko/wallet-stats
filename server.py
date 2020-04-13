@@ -65,15 +65,18 @@ async def standard_reply(message: types.Message):
     balance = Balance()
 
     try:
-        reply_info = balance.summary_for(message.text)
+        reply_info, start_date, end_date = balance.summary_for(message.text)
     except exceptions.NotCorrectMessage as e:
         await message.reply(str(e))
         return
 
     answer_message = (
-        "{}".format(reply_info)
+        f"Balance change \nfrom {start_date} to {end_date}\n\n"
+        "                amount       change\n"
+        f"{reply_info}"
     )
     await message.reply(answer_message)
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

@@ -77,7 +77,7 @@ class Balance:
         return assets_dict
 
 
-    def summary_for (self, period) -> str:
+    def summary_for (self, period):
         """ 
         The function to calculate account change summary for given period. 
   
@@ -85,8 +85,11 @@ class Balance:
             period (str): String represented period. 
           
         Returns: 
-            Formated string with wallet info
+            reply_info Formated string with wallet info
+            start_date Formated string - start of period
+            end_date Formated string - end of period
         """
+        reply_info = ""
 
         # 0. parse period into format DAY|WEEK|MONTH <num>
         timeframe, count = self.parse_date(period)
@@ -101,9 +104,6 @@ class Balance:
         end_date = "..."
         if len(list(self.assets.keys())) > 0:
             end_date = self.assets[list(self.assets.keys())[0]].date
-
-        reply_info = f"Balance change from {start_date} to {end_date}\n\n"
-        reply_info += f"           amount       btc change    usd change\n"
 
         # 1.5 calculate total value of wallet (usd, btc) in the past
         retro_total_btc = 0
@@ -122,26 +122,33 @@ class Balance:
             total_btc += value.btc_value
 
             # calculate value % change in BTC and USD
-            chnage_btc = "0.00"
-            chnage_usd = "0.00"
+            chnage_btc = "-"
+            chnage_btc_per = "-"
+            chnage_usd = "-"
+            chnage_usd_per = "-"
             if asset in retro_assets:
                 if value.btc_value != 0:
-                    chnage_btc = '%.2f' % float(((value.btc_value - retro_assets[asset].btc_value)/value.btc_value) * 100)
+                    chnage_btc = '%.4f' % float(value.btc_value - retro_assets[asset].btc_value)
+                    chnage_btc_per = '%.2f' % float(((value.btc_value - retro_assets[asset].btc_value)/value.btc_value) * 100)
                 if value.usd_value != 0:
-                    chnage_usd = '%.2f' % float(((value.usd_value - retro_assets[asset].usd_value)/value.usd_value) * 100)
+                    chnage_usd = '%.2f' % float(value.usd_value - retro_assets[asset].usd_value)
+                    chnage_usd_per = '%.2f' % float(((value.usd_value - retro_assets[asset].usd_value)/value.usd_value) * 100)
 
             # form reply lines, ex: BNB 15 10% -1%
-            reply_info += f"{asset}     {value.amount}      {chnage_btc}%          {chnage_usd}%  \n"
+            reply_info += f"{asset}     {value.amount}      {'%.8f' % float(value.amount - retro_assets[asset].amount)}\n \
+                      btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:
-            btc_change = '%.2f' % float(((total_btc - retro_total_btc) / total_btc)*100)
-            reply_info += f"\nTOTAL BTC     {'%.8f' % total_btc}  ({btc_change}%)\n"
+            btc_change = '%.2f' % float(total_btc - retro_total_btc)
+            btc_change_per = '%.2f' % float(((total_btc - retro_total_btc) / total_btc)*100)
+            reply_info += f"\nTOTAL BTC     {'%.8f' % total_btc}  {btc_change} ({btc_change_per}%)\n"
         if total_usd != 0:
-            usd_change = '%.2f' % float(((total_usd - retro_total_usd) / total_usd)*100)
-            reply_info += f"TOTAL USD     {'%.2f' % total_usd}  ({usd_change}%)\n"
+            usd_change = '%.2f' % float(total_usd - retro_total_usd)
+            usd_change_per = '%.2f' % float(((total_usd - retro_total_usd) / total_usd)*100)
+            reply_info += f"TOTAL USD     {'%.2f' % total_usd}  {usd_change} ({usd_change_per}%)\n"
 
-        return reply_info
+        return reply_info, start_date, end_date
 
 
     def parse_date (self, period) :  #-> str, int
@@ -161,7 +168,7 @@ class Balance:
             not regexp_result.group(0) or \
             not regexp_result.group(1) or \
             not regexp_result.group(2):
-                raise exceptions.NotCorrectMessage("Unknown command, try DAY1 or MONTH")
+                raise exceptions.NotCorrectMessage("Unknown command, try DAY1 or MONTH1")
 
         tf = regexp_result.group(1).strip().upper()
         if tf.startswith("/"):
@@ -178,6 +185,6 @@ class Balance:
 
             return return_tf, count
         else:
-            raise exceptions.NotCorrectMessage("Unknown timeframe, try DAY1 or MONTH")
+            raise exceptions.NotCorrectMessage("Unknown timeframe, try DAY1 or MONTH1")
 
         return 'DAY', 1
