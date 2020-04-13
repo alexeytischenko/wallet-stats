@@ -66,7 +66,7 @@ class Balance:
             for record in records:
                 assets_dict[record.asset] = Asset(
                     date=str(record.dt)[:10],
-                    name=record.asset, 
+                    name=record.asset.rstrip(), 
                     amount=(record.free + record.locked), 
                     usd_value=record.usd, 
                     btc_value=record.btc)
