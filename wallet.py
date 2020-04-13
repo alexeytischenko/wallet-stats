@@ -122,11 +122,13 @@ class Balance:
             total_btc += value.btc_value
 
             # calculate value % change in BTC and USD
+            change_val = "-"
             chnage_btc = "-"
             chnage_btc_per = "-"
             chnage_usd = "-"
             chnage_usd_per = "-"
             if asset in retro_assets:
+                change_val = '%.8f' % float(value.amount - retro_assets[asset].amount)
                 if value.btc_value != 0:
                     chnage_btc = '%.4f' % float(value.btc_value - retro_assets[asset].btc_value)
                     chnage_btc_per = '%.2f' % float(((value.btc_value - retro_assets[asset].btc_value)/value.btc_value) * 100)
@@ -135,7 +137,7 @@ class Balance:
                     chnage_usd_per = '%.2f' % float(((value.usd_value - retro_assets[asset].usd_value)/value.usd_value) * 100)
 
             # form reply lines, ex: BNB 15 10% -1%
-            reply_info += f"{asset}     {value.amount}      {'%.8f' % float(value.amount - retro_assets[asset].amount)}\n \
+            reply_info += f"{asset}     {value.amount}      {change_val}\n \
                       btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
         
         #final lines, ex: TOTAL BTC 1.1 10%
