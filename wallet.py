@@ -64,7 +64,7 @@ class Balance:
             records = db.execute(query).fetchall()
 
             for record in records:
-                assets_dict[record.asset] = Asset(
+                assets_dict[record.asset.rstrip()] = Asset(
                     date=str(record.dt)[:10],
                     name=record.asset.rstrip(), 
                     amount=(record.free + record.locked), 
