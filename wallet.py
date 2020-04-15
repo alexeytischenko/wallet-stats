@@ -118,6 +118,8 @@ class Balance:
         total_btc = 0
 
         for asset, value in self.assets.items():
+            print('asset', asset)
+            print('value', value)
             total_usd += value.usd_value
             total_btc += value.btc_value
 
@@ -138,7 +140,7 @@ class Balance:
 
             # form reply lines, ex: BNB 15 10% -1%
             reply_info += f"{asset}     {value.amount}      {change_val}\n \
-                      btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
+                   btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:
