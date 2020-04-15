@@ -103,10 +103,10 @@ try:
             if asset['asset'] == "USDT":
                 usd_value = float(asset['free']) + float(asset['locked'])
             elif usd_name in prices:
-                if prices[usd_name] > 0:
-                    usd_value = (float(asset['free']) + float(asset['locked'])) *  prices[usd_name]
-                else:
-                    usd_value = (float(asset['free']) + float(asset['locked'])) * (prices["BTCUSDT"] * prices[btc_name])
+                usd_value = (float(asset['free']) + float(asset['locked'])) *  prices[usd_name]
+            else:
+                usd_value = (float(asset['free']) + float(asset['locked'])) * (prices["BTCUSDT"] * prices[btc_name])
+
 
             # commit record
             db.execute("INSERT INTO snapshot24h (account, asset, dt, free, locked, usd, btc) VALUES \
