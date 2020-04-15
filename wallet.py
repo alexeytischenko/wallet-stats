@@ -118,8 +118,10 @@ class Balance:
         total_btc = 0
 
         for asset, value in self.assets.items():
-            print('asset', asset)
-            print('value', value)
+            print('asset')
+            print(asset)
+            print('value')
+            print(value)
             total_usd += value.usd_value
             total_btc += value.btc_value
 
