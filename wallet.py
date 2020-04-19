@@ -174,7 +174,7 @@ class Balance:
             count: int 
         """
 
-        regexp_result = re.match(r"(\D*)\s?(\d+)(?:\s?(.*))?", period)
+        regexp_result = re.match(r"(\D*)\s?(\d+)(?:\s?(.+))?", period)
         if not regexp_result or \
             not regexp_result.group(0) or \
             not regexp_result.group(1) or \
