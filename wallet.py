@@ -38,10 +38,10 @@ class Balance:
         The constructor for Balance class.
         """
         self.account = acc
-        self.assets = self.assets_for("DAY", 0, None) # current values of all assets
+        self.assets = self.assets_for("DAY", 0) # current values of all assets
 
 
-    def assets_for (self, timeframe, count, asset_name) -> Dict:
+    def assets_for (self, timeframe, count) -> Dict:
         """ 
         The function to requested DataBase records for given period. 
   
@@ -58,10 +58,7 @@ class Balance:
         try:
             # get all assets for date interval '{count}' {timeframe} minus 1 day
             # for today values use: '0' DAY
-            asset_name_query = ""
-            if asset_name is not None:
-                asset_name_query = f"AND asset = '{asset_name}'"
-            query = f"SELECT * FROM snapshot24h WHERE account = '{self.account}' {asset_name_query} AND \
+            query = f"SELECT * FROM snapshot24h WHERE account = '{self.account}' AND \
                 DATE(dt) > CURRENT_DATE - (INTERVAL '{count}' {timeframe} + INTERVAL '1' DAY) AND \
                 DATE(dt) <= CURRENT_DATE - INTERVAL '{count}' {timeframe}"
             print(query)
@@ -99,7 +96,7 @@ class Balance:
         timeframe, count, asset_name = self.parse_date(period)
 
         # 1. get data for the first day before 'period' 
-        retro_assets = self.assets_for(timeframe, count, asset_name)
+        retro_assets = self.assets_for(timeframe, count)
 
         # define start and end date to display to user
         start_date = "..."
@@ -123,6 +120,7 @@ class Balance:
         total_btc = 0
 
         for asset, value in self.assets.items():
+
             print('asset')
             print(asset)
             print('value')
@@ -146,8 +144,9 @@ class Balance:
                     chnage_usd_per = '%.2f' % float(((value.usd_value - retro_assets[asset].usd_value)/value.usd_value) * 100)
 
             # form reply lines, ex: BNB 15 10% -1%
-            reply_info += f"{asset}     {value.amount}      {change_val}\n \
-                 btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
+            if asset_name is None or asset_name == asset:
+                reply_info += f"{asset}     {value.amount}      {change_val}\n \
+                     btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:
