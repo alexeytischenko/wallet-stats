@@ -38,16 +38,17 @@ class Balance:
         The constructor for Balance class.
         """
         self.account = acc
-        self.assets = self.assets_for("DAY", 0) # current values of all assets
+        self.assets = self.assets_for("DAY", 0, None) # current values of all assets
 
 
-    def assets_for (self, timeframe, count) -> Dict:
+    def assets_for (self, timeframe, count, asset_name) -> Dict:
         """ 
         The function to requested DataBase records for given period. 
   
         Parameters: 
             timeframe (str): interval (DAY|MONTH|YEAR). 
             count (int): number of intervals
+            asset_name (str): request more detailed info on certain asset
           
         Returns: 
             Dict: assets and their values for given period. 
@@ -57,7 +58,10 @@ class Balance:
         try:
             # get all assets for date interval '{count}' {timeframe} minus 1 day
             # for today values use: '0' DAY
-            query = f"SELECT * FROM snapshot24h WHERE account = '{self.account}' AND \
+            asset_name_query = ""
+            if asset_name is not None:
+                asset_name_query = "AND asset = '{asset_name}'"
+            query = f"SELECT * FROM snapshot24h WHERE account = '{self.account}' {asset_name_query} AND \
                 DATE(dt) > CURRENT_DATE - (INTERVAL '{count}' {timeframe} + INTERVAL '1' DAY) AND \
                 DATE(dt) <= CURRENT_DATE - INTERVAL '{count}' {timeframe}"
             print(query)
@@ -92,10 +96,10 @@ class Balance:
         reply_info = ""
 
         # 0. parse period into format DAY|WEEK|MONTH <num>
-        timeframe, count = self.parse_date(period)
+        timeframe, count, asset_name = self.parse_date(period)
 
         # 1. get data for the first day before 'period' 
-        retro_assets = self.assets_for(timeframe, count)
+        retro_assets = self.assets_for(timeframe, count, asset_name)
 
         # define start and end date to display to user
         start_date = "..."
@@ -135,7 +139,7 @@ class Balance:
             if asset in retro_assets:
                 change_val = '%.8f' % float(value.amount - retro_assets[asset].amount)
                 if value.btc_value != 0:
-                    chnage_btc = '%.4f' % float(value.btc_value - retro_assets[asset].btc_value)
+                    chnage_btc = '%.8f' % float(value.btc_value - retro_assets[asset].btc_value)
                     chnage_btc_per = '%.2f' % float(((value.btc_value - retro_assets[asset].btc_value)/value.btc_value) * 100)
                 if value.usd_value != 0:
                     chnage_usd = '%.2f' % float(value.usd_value - retro_assets[asset].usd_value)
@@ -143,11 +147,11 @@ class Balance:
 
             # form reply lines, ex: BNB 15 10% -1%
             reply_info += f"{asset}     {value.amount}      {change_val}\n \
-                   btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
+                 btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:
-            btc_change = '%.2f' % float(total_btc - retro_total_btc)
+            btc_change = '%.8f' % float(total_btc - retro_total_btc)
             btc_change_per = '%.2f' % float(((total_btc - retro_total_btc) / total_btc)*100)
             reply_info += f"\nTOTAL BTC     {'%.8f' % total_btc}  {btc_change} ({btc_change_per}%)\n"
         if total_usd != 0:
@@ -170,7 +174,7 @@ class Balance:
             count: int 
         """
 
-        regexp_result = re.match(r"(\D*)\s?(\d+)", period)
+        regexp_result = re.match(r"(\D*)\s?(\d+)(?:\s?(.*))?", period)
         if not regexp_result or \
             not regexp_result.group(0) or \
             not regexp_result.group(1) or \
@@ -182,6 +186,10 @@ class Balance:
             tf = tf[1:]
         count = int(regexp_result.group(2).replace(" ", ""))
 
+        asset = None
+        if regexp_result.group(3) is not None:
+            asset = regexp_result.group(3).strip().upper()
+
         if tf in timeframes:
             return_tf = timeframes[tf]
 
@@ -190,8 +198,8 @@ class Balance:
                 return_tf = "DAY"
                 count = count * 7
 
-            return return_tf, count
+            return return_tf, count, asset
         else:
             raise exceptions.NotCorrectMessage("Unknown timeframe, try DAY1 or MONTH1")
 
-        return 'DAY', 1
+        return 'DAY', 1, None
