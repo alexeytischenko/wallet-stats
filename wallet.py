@@ -60,7 +60,7 @@ class Balance:
             # for today values use: '0' DAY
             asset_name_query = ""
             if asset_name is not None:
-                asset_name_query = "AND asset = '{asset_name}'"
+                asset_name_query = f"AND asset = '{asset_name}'"
             query = f"SELECT * FROM snapshot24h WHERE account = '{self.account}' {asset_name_query} AND \
                 DATE(dt) > CURRENT_DATE - (INTERVAL '{count}' {timeframe} + INTERVAL '1' DAY) AND \
                 DATE(dt) <= CURRENT_DATE - INTERVAL '{count}' {timeframe}"
@@ -189,6 +189,7 @@ class Balance:
         asset = None
         if regexp_result.group(3) is not None:
             asset = regexp_result.group(3).strip().upper()
+        print(asset)
 
         if tf in timeframes:
             return_tf = timeframes[tf]
