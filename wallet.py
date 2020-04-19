@@ -100,7 +100,6 @@ class Balance:
 
         # define start and end date to display to user
         start_date = "..."
-        print(list(retro_assets.keys()))
         if len(list(retro_assets.keys())) > 0:
             start_date = retro_assets[list(retro_assets.keys())[0]].date
         end_date = "..."
@@ -120,11 +119,6 @@ class Balance:
         total_btc = 0
 
         for asset, value in self.assets.items():
-
-            print('asset')
-            print(asset)
-            print('value')
-            print(value)
             total_usd += value.usd_value
             total_btc += value.btc_value
 
@@ -146,7 +140,7 @@ class Balance:
             # form reply lines, ex: BNB 15 10% -1%
             if asset_name is None or asset_name == asset:
                 reply_info += f"{asset}     {value.amount}      {change_val}\n \
-                     btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
+                 btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:

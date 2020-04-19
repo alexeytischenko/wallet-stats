@@ -71,7 +71,7 @@ async def standard_reply(message: types.Message):
         return
 
     answer_message = (
-        f"Binance spot wallet balance change \nfrom {start_date} to {end_date}\n\n"
+        f"Binance spot wallet stats \nfrom {start_date} to {end_date}\n\n"
         "                amount       change\n"
         f"{reply_info}"
     )
