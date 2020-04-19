@@ -23,6 +23,9 @@ class Asset(NamedTuple):
     usd_value: float
     btc_value: float
 
+def drop_trail_zeros(float_num):
+    """ Drops trailing zeros. """
+    return re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str(float_num))
 
 class Balance:
     """ 
@@ -123,11 +126,8 @@ class Balance:
             total_btc += value.btc_value
 
             # calculate value % change in BTC and USD
-            change_val = "-"
-            chnage_btc = "-"
-            chnage_btc_per = "-"
-            chnage_usd = "-"
-            chnage_usd_per = "-"
+            change_val = chnage_btc = chnage_btc_per = chnage_usd = chnage_usd_per = "-"
+
             if asset in retro_assets:
                 change_val = '%.8f' % float(value.amount - retro_assets[asset].amount)
                 if value.btc_value != 0:
@@ -139,14 +139,14 @@ class Balance:
 
             # form reply lines, ex: BNB 15 10% -1%
             if asset_name is None or asset_name == asset:
-                reply_info += f"{asset}     {value.amount}      {change_val}\n \
-                 btc {chnage_btc}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
+                reply_info += f"{asset}     {drop_trail_zeros(value.amount)}      {drop_trail_zeros(change_val)}\n \
+                 btc {drop_trail_zeros(chnage_btc)}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:
             btc_change = '%.8f' % float(total_btc - retro_total_btc)
             btc_change_per = '%.2f' % float(((total_btc - retro_total_btc) / total_btc)*100)
-            reply_info += f"\nTOTAL BTC     {'%.8f' % total_btc}  {btc_change} ({btc_change_per}%)\n"
+            reply_info += f"\nTOTAL BTC     {drop_trail_zeros('%.8f' % total_btc)}  {drop_trail_zeros(btc_change)} ({btc_change_per}%)\n"
         if total_usd != 0:
             usd_change = '%.2f' % float(total_usd - retro_total_usd)
             usd_change_per = '%.2f' % float(((total_usd - retro_total_usd) / total_usd)*100)
