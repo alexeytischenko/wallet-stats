@@ -33,11 +33,11 @@ class Balance:
     """
 
 
-    def __init__(self):
+    def __init__(self, acc):
         """ 
         The constructor for Balance class.
         """
-
+        self.account = acc
         self.assets = self.assets_for("DAY", 0) # current values of all assets
 
 
@@ -57,7 +57,7 @@ class Balance:
         try:
             # get all assets for date interval '{count}' {timeframe} minus 1 day
             # for today values use: '0' DAY
-            query = f"SELECT * FROM snapshot24h WHERE \
+            query = f"SELECT * FROM snapshot24h WHERE account = '{self.account}' AND \
                 DATE(dt) > CURRENT_DATE - (INTERVAL '{count}' {timeframe} + INTERVAL '1' DAY) AND \
                 DATE(dt) <= CURRENT_DATE - INTERVAL '{count}' {timeframe}"
             print(query)
@@ -99,6 +99,7 @@ class Balance:
 
         # define start and end date to display to user
         start_date = "..."
+        print(list(retro_assets.keys()))
         if len(list(retro_assets.keys())) > 0:
             start_date = retro_assets[list(retro_assets.keys())[0]].date
         end_date = "..."

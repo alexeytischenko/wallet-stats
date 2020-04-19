@@ -62,7 +62,7 @@ async def standard_reply(message: types.Message):
         string to display as a reply
     """
 
-    balance = Balance()
+    balance = Balance('MANUAL')
 
     try:
         reply_info, start_date, end_date = balance.summary_for(message.text)
