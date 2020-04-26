@@ -73,7 +73,7 @@ async def standard_reply(message: types.Message):
 
     answer_message = (
         f"Binance spot wallet stats \nfrom {start_date} to {end_date}\n\n"
-        "                amount       change\n"
+        "                  amount          change\n"
         f"{reply_info}"
     )
     await message.reply(answer_message)
