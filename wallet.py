@@ -137,19 +137,19 @@ class Balance:
             change_val = chnage_btc = chnage_btc_per = chnage_usd = chnage_usd_per = "-"
 
             if asset in retro_assets:
-                change_val = '%.8f' % float(value.amount - retro_assets[asset].amount)
+                change_val = value.amount - retro_assets[asset].amount
                 if value.btc_value != 0:
-                    chnage_btc = '%.8f' % float(value.btc_value - retro_assets[asset].btc_value)
-                    chnage_btc_per = '%.2f' % float(((value.btc_value - retro_assets[asset].btc_value)/value.btc_value) * 100)
+                    chnage_btc = value.btc_value - retro_assets[asset].btc_value
+                    chnage_btc_per = (value.btc_value - retro_assets[asset].btc_value)/value.btc_value
                 if value.usd_value != 0:
-                    chnage_usd = '%.2f' % float(value.usd_value - retro_assets[asset].usd_value)
-                    chnage_usd_per = '%.2f' % float(((value.usd_value - retro_assets[asset].usd_value)/value.usd_value) * 100)
+                    chnage_usd = value.usd_value - retro_assets[asset].usd_value
+                    chnage_usd_per = (value.usd_value - retro_assets[asset].usd_value)/value.usd_value
 
             # form reply lines, format ASSET value change \n\n btc value (% change) usd value (% change)
             if asset_name is None or asset_name == asset:
-                reply_info += "{:<9}{:<15}{:^15}\nbtc {}({}%)  ${}({}%)\n\n" \
+                reply_info += "{:<9}{:<15}{:^15}\nbtc {:.8f}({:.2%})  ${:.2f}({:.2%})\n\n" \
                     .format(asset, float(value.amount), float(change_val), \
-                    float(chnage_btc), chnage_btc_per, chnage_usd, chnage_usd_per)
+                    float(chnage_btc), float(chnage_btc_per), float(chnage_usd), float(chnage_usd_per))
 
         
         #final lines, ex: TOTAL BTC 1.1 10%
@@ -159,9 +159,10 @@ class Balance:
             reply_info += "\nTOTAL BTC     {:.8f}  {:.8f} ({:.2%})\n"\
                 .format(float(total_btc), float(btc_change), float(btc_change_per))
         if total_usd != 0:
-            usd_change = '%.2f' % float(total_usd - retro_total_usd)
-            usd_change_per = '%.2f' % float(((total_usd - retro_total_usd) / total_usd)*100)
-            reply_info += f"TOTAL USD     {'%.2f' % total_usd}  {usd_change} ({usd_change_per}%)\n"
+            usd_change = total_usd - retro_total_usd
+            usd_change_per = (total_usd - retro_total_usd) / total_usd
+            reply_info += "TOTAL USD     {:.2f}  {:.2f} ({:.2%})\n"\
+                .format(float(total_usd), float(usd_change), float(usd_change_per))
 
         return reply_info, start_date, end_date
 
