@@ -139,8 +139,11 @@ class Balance:
 
             # form reply lines, ex: BNB 15 10% -1%
             if asset_name is None or asset_name == asset:
-                reply_info += f"{asset}     {drop_trail_zeros(value.amount)}      {drop_trail_zeros(change_val)}\n \
-                 btc {drop_trail_zeros(chnage_btc)}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
+                reply_info += "{:<8}{:^15}{:^15}\n{:^8}btc {}({}%)  ${}({}%)\n\n".
+                format(asset, drop_trail_zeros(value.amount), drop_trail_zeros(change_val), " ", drop_trail_zeros(chnage_btc),\
+                     chnage_btc_per, chnage_usd, chnage_usd_per)
+                # reply_info += f"{asset}     {drop_trail_zeros(value.amount)}      {drop_trail_zeros(change_val)}\n \
+                #  btc {drop_trail_zeros(chnage_btc)}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:

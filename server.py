@@ -63,6 +63,7 @@ async def standard_reply(message: types.Message):
     """
 
     balance = Balance('MANUAL')
+    print("created new instance of Balance: {}".format(id(balance)))
 
     try:
         reply_info, start_date, end_date = balance.summary_for(message.text)
