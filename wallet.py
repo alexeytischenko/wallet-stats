@@ -137,13 +137,12 @@ class Balance:
                     chnage_usd = '%.2f' % float(value.usd_value - retro_assets[asset].usd_value)
                     chnage_usd_per = '%.2f' % float(((value.usd_value - retro_assets[asset].usd_value)/value.usd_value) * 100)
 
-            # form reply lines, ex: BNB 15 10% -1%
+            # form reply lines, format ASSET value change \n\n btc value (% change) usd value (% change)
             if asset_name is None or asset_name == asset:
-                reply_info += "{:<8}{:^15}{:^15}\n{:^8}btc {}({}%)  ${}({}%)\n\n".format(\
-                    asset, drop_trail_zeros(value.amount), drop_trail_zeros(change_val), " ", drop_trail_zeros(chnage_btc),\
-                     chnage_btc_per, chnage_usd, chnage_usd_per)
-                # reply_info += f"{asset}     {drop_trail_zeros(value.amount)}      {drop_trail_zeros(change_val)}\n \
-                #  btc {drop_trail_zeros(chnage_btc)}({chnage_btc_per}%)          $ {chnage_usd}({chnage_usd_per}%)\n\n"
+                reply_info += "{:<9}{:<15}{:^15}\n{:^2}btc {}({}%)  ${}({}%)\n\n" \
+                    .format(asset, drop_trail_zeros(value.amount), drop_trail_zeros(change_val), " ", \
+                    drop_trail_zeros(chnage_btc), chnage_btc_per, chnage_usd, chnage_usd_per)
+
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:
