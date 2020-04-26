@@ -139,7 +139,7 @@ class Balance:
 
             # form reply lines, format ASSET value change \n\n btc value (% change) usd value (% change)
             if asset_name is None or asset_name == asset:
-                reply_info += "{:<9}|{:<15}|{:^15}\nbtc {}({}%)  ${}({}%)\n\n" \
+                reply_info += "{:*<9}|{:*<15}|{:*^15}\nbtc {}({}%)  ${}({}%)\n\n" \
                     .format(asset, drop_trail_zeros(value.amount), drop_trail_zeros(change_val), \
                     drop_trail_zeros(chnage_btc), chnage_btc_per, chnage_usd, chnage_usd_per)
 
