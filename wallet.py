@@ -24,8 +24,16 @@ class Asset(NamedTuple):
     btc_value: float
 
 def drop_trail_zeros(float_num):
-    """ Drops trailing zeros. """
-    return re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str(float_num))
+    """ 
+    Drops trailing zeros. 
+    
+    Parameters: 
+        float_num (str): float number represented in string.   
+
+    Returns: 
+        float.   
+    """
+    return float(re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str(float_num)))
 
 class Balance:
     """ 
@@ -140,16 +148,16 @@ class Balance:
             # form reply lines, format ASSET value change \n\n btc value (% change) usd value (% change)
             if asset_name is None or asset_name == asset:
                 reply_info += "{:<9}{:<15}{:^15}\nbtc {}({}%)  ${}({}%)\n\n" \
-                    .format(asset, drop_trail_zeros(value.amount), drop_trail_zeros(change_val), \
-                    drop_trail_zeros(chnage_btc), chnage_btc_per, chnage_usd, chnage_usd_per)
+                    .format(asset, float(value.amount), float(change_val), \
+                    float(chnage_btc), chnage_btc_per, chnage_usd, chnage_usd_per)
 
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:
-            btc_change = float(total_btc - retro_total_btc)
-            btc_change_per = float((total_btc - retro_total_btc) / total_btc)
+            btc_change = total_btc - retro_total_btc
+            btc_change_per = (total_btc - retro_total_btc) / total_btc
             reply_info += "\nTOTAL BTC     {:.8f}  {:.8f} ({:.2%})\n"\
-                .format(drop_trail_zeros(total_btc), drop_trail_zeros(btc_change), btc_change_per)
+                .format(float(total_btc), float(btc_change), float(btc_change_per))
         if total_usd != 0:
             usd_change = '%.2f' % float(total_usd - retro_total_usd)
             usd_change_per = '%.2f' % float(((total_usd - retro_total_usd) / total_usd)*100)
