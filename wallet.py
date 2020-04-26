@@ -146,9 +146,10 @@ class Balance:
         
         #final lines, ex: TOTAL BTC 1.1 10%
         if total_btc != 0:
-            btc_change = '%.8f' % float(total_btc - retro_total_btc)
-            btc_change_per = '%.2f' % float(((total_btc - retro_total_btc) / total_btc)*100)
-            reply_info += f"\nTOTAL BTC     {drop_trail_zeros('%.8f' % total_btc)}  {drop_trail_zeros(btc_change)} ({btc_change_per}%)\n"
+            btc_change = float(total_btc - retro_total_btc)
+            btc_change_per = float((total_btc - retro_total_btc) / total_btc)
+            reply_info += "\nTOTAL BTC     {:.8f}  {:.8f} ({:.2%})\n"\
+                .format(drop_trail_zeros(total_btc), drop_trail_zeros(btc_change), btc_change_per)
         if total_usd != 0:
             usd_change = '%.2f' % float(total_usd - retro_total_usd)
             usd_change_per = '%.2f' % float(((total_usd - retro_total_usd) / total_usd)*100)
