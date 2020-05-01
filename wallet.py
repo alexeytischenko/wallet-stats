@@ -23,17 +23,20 @@ class Asset(NamedTuple):
     usd_value: float
     btc_value: float
 
-def drop_trail_zeros(str_num):
+def drop_trail_zeros(str_num, precision = 8):
     """ 
     Drops trailing zeros. 
     
     Parameters: 
         float_num (str): float number represented in string.   
-
+        precision = 8 (int) : max number of decimal part digits
     Returns: 
         float.   
     """
-    return float(re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str(str_num)))
+    # restrict number up to precision
+    str_formated = ("{:." + str(t) + "f}").format(str_num)
+    # drop trailing zeros and return
+    return float(re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str_formated))
 
 class Balance:
     """ 
@@ -149,7 +152,7 @@ class Balance:
             if asset_name is None or asset_name == asset:
                 reply_info += "{:<9}{:<15}{:^15}\nbtc {:.8f}({:.2%})  ${:.2f}({:.2%})\n\n" \
                     .format(asset, float(value.amount), float(change_val), \
-                    drop_trail_zeros(chnage_btc), drop_trail_zeros(chnage_btc_per), drop_trail_zeros(chnage_usd), drop_trail_zeros(chnage_usd_per))
+                    drop_trail_zeros(chnage_btc), drop_trail_zeros(chnage_btc_per), drop_trail_zeros(chnage_usd, 2), drop_trail_zeros(chnage_usd_per, 2))
 
         
         #final lines, ex: TOTAL BTC 1.1 10%
