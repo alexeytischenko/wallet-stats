@@ -34,7 +34,7 @@ def drop_trail_zeros(str_num, precision = 8):
         float.   
     """
     # restrict number up to precision
-    str_formated = ("{:." + str(t) + "f}").format(str_num)
+    str_formated = ("{:." + str(precision) + "f}").format(str_num)
     # drop trailing zeros and return
     return float(re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str_formated))
 
