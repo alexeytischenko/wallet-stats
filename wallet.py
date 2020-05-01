@@ -23,7 +23,7 @@ class Asset(NamedTuple):
     usd_value: float
     btc_value: float
 
-def drop_trail_zeros(float_num):
+def drop_trail_zeros(str_num):
     """ 
     Drops trailing zeros. 
     
@@ -33,7 +33,7 @@ def drop_trail_zeros(float_num):
     Returns: 
         float.   
     """
-    return float(re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str(float_num)))
+    return float(re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str(str_num)))
 
 class Balance:
     """ 
@@ -149,7 +149,7 @@ class Balance:
             if asset_name is None or asset_name == asset:
                 reply_info += "{:<9}{:<15}{:^15}\nbtc {:.8f}({:.2%})  ${:.2f}({:.2%})\n\n" \
                     .format(asset, float(value.amount), float(change_val), \
-                    float(chnage_btc), float(chnage_btc_per), float(chnage_usd), float(chnage_usd_per))
+                    drop_trail_zeros(chnage_btc), drop_trail_zeros(chnage_btc_per), drop_trail_zeros(chnage_usd), drop_trail_zeros(chnage_usd_per))
 
         
         #final lines, ex: TOTAL BTC 1.1 10%
