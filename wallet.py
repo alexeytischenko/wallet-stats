@@ -33,7 +33,8 @@ def drop_trail_zeros(str_num):
     Returns: 
         float.   
     """
-    print(str_num)
+    if str_num == "-":
+        return str_num
     return float(re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str(str_num)))
 
 class Balance:
