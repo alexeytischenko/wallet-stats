@@ -33,8 +33,6 @@ def drop_trail_zeros(str_num):
     Returns: 
         float.   
     """
-    if str_num == "-":
-        return str_num
     return float(re.sub(r"(\d+\.\d+?)(0+)$", r"\1", str(str_num)))
 
 class Balance:
@@ -136,7 +134,7 @@ class Balance:
             total_btc += value.btc_value
 
             # calculate value % change in BTC and USD
-            change_val = chnage_btc = chnage_btc_per = chnage_usd = chnage_usd_per = "-"
+            change_val = chnage_btc = chnage_btc_per = chnage_usd = chnage_usd_per = "0.0"
 
             if asset in retro_assets:
                 change_val = value.amount - retro_assets[asset].amount
