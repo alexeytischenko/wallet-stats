@@ -115,7 +115,9 @@ class Balance:
         # define start and end date to display to user
         start_date = "..."
         if len(list(retro_assets.keys())) > 0:
+            print(f"retro_assets list: {retro_assets}")
             start_date = retro_assets[list(retro_assets.keys())[0]].date
+            print(f"start_date = {start_date}")
         end_date = "..."
         if len(list(self.assets.keys())) > 0:
             end_date = self.assets[list(self.assets.keys())[0]].date
