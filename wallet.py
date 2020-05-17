@@ -10,11 +10,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 import re
 
-# Set up database
-engine = create_engine(config.db_sn_url)
-db = scoped_session(sessionmaker(bind=engine))
-
-
 class Asset(NamedTuple):
     """Datatype 'asset'. """
     date: str
@@ -46,11 +41,15 @@ class Balance:
         assets: list of assets. 
     """
 
+    # Set up database
+    engine = create_engine(config.db_sn_url)
+    db = scoped_session(sessionmaker(bind=engine))
 
     def __init__(self, acc):
         """ 
         The constructor for Balance class.
         """
+
         self.account = acc
         self.assets = self.assets_for("DAY", 0) # current values of all assets
 
@@ -76,7 +75,7 @@ class Balance:
                 DATE(dt) > CURRENT_DATE - (INTERVAL '{count}' {timeframe} + INTERVAL '1' DAY) AND \
                 DATE(dt) <= CURRENT_DATE - INTERVAL '{count}' {timeframe}"
             print(query)
-            records = db.execute(query).fetchall()
+            records = self.db.execute(query).fetchall()
 
             for record in records:
                 assets_dict[record.asset.rstrip()] = Asset(
@@ -214,3 +213,8 @@ class Balance:
             raise exceptions.NotCorrectMessage("Unknown timeframe, try DAY1 or MONTH1")
 
         return 'DAY', 1, None
+
+
+    def __del__(self): 
+        print('Destructor called. Removing session') 
+        self.db.remove()
