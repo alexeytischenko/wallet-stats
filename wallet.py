@@ -38,6 +38,7 @@ class Balance:
     This is a class for gethering stats on a cripto wallet. 
       
     Attributes: 
+        account: Binance account config name
         assets: list of assets. 
     """
 
