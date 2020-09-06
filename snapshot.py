@@ -38,7 +38,7 @@ def status (mes):
 # setup logging
 logtime = dt.datetime.now()
 logging.basicConfig(
-    filename='logs/snapshot' +
+    filename='wallet-stats/logs/snapshot' +
     str(logtime.year) + str(logtime.month) + str(logtime.day) + '.log',
     level=logging.DEBUG, 
     format='%(asctime)s %(message)s'
