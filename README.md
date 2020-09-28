@@ -11,12 +11,11 @@ Bot returns value of Binance spot wallet for different periods.
 
 ##### Constants used in code
 
-`TELEGRAM_API_TOKEN` — bot API token
-
+`TELEGRAM_API_TOKEN` — bot API token\
 `TELEGRAM_ACCESS_ID` — Authorized Telegram ID, all other will be ignored
 
 ======================\
-**config.py** file should have the following variables:
+Following variables must be declared in **config.py** 
 
 telegram api tocken
 ```
@@ -26,14 +25,14 @@ telgram account id
 ```
 telgram_client_id = 111111111
 ```
-postgres connect string
+postgres connect string - SQL dump should be restored (see db.sql)
 ```
 db_sn_url = "postgres://user:password@host"
 ```
-binance keys
+binance keys - create API keys in your Binance dashboard
 ```
-api_key = "P462l7kVLb6cWgPX7PAA4vdg9UDS3AfNxdgmqLgwajwojnXLhhCsxqHrOHeD1CU6"
-api_secret = "xbi3vcu42uiDOHKOfqTV25nCUJ2xgIhLEXYZcimymArn5sYV1Defids2eEOEEuWQ"
+api_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+api_secret = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 ```
 
 ======================
